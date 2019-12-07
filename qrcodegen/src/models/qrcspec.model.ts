@@ -18,13 +18,6 @@ export class Qrcspec extends Model {
   @property({
     type: 'number',
     required: true,
-    default: 0.3,
-  })
-  quality: number;
-
-  @property({
-    type: 'number',
-    required: true,
     default: 1,
   })
   margin: number;
