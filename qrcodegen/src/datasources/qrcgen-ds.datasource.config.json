@@ -1,0 +1,6 @@
+{
+  "name": "qrcgenDS",
+  "connector": "memory",
+  "localStorage": "qrcgen",
+  "file": ""
+}
