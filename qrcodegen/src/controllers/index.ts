@@ -1,2 +1,2 @@
 export * from './ping.controller';
-export * from './qrcode.controller';
+export * from './qrcgen.controller';
