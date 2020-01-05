@@ -1,0 +1,18 @@
+{
+  "name": "waproxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "waservice.js",
+  "scripts": {
+    "start": "node waservice.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jsonfile": "^5.0.0",
+    "puppeteer": "^2.0.0"
+  }
+}
