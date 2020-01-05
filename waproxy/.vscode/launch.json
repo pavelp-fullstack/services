@@ -7,14 +7,14 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch Proxy Api",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/nexsrv.js"
+      "program": "${workspaceFolder}/waservice.js"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch waptest",
+      "name": "Launch watest",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/watest.js"
     },
