@@ -6,6 +6,11 @@ exports.screenshot = async (req, res) => {
   res.end(data, "binary");
 };
 
+exports.contacts = async (req, res) => {
+  const contacts = await waproxy.getContacts();
+  res.json(contacts);
+};
+
 (async () => {
   await waproxy.connect();
 })();

@@ -18,6 +18,30 @@ class WhatsAppProxy {
     return this.browser && this.page ? true : false;
   }
 
+  async getContacts() {
+    const contacts = await this.page.evaluate(() => {
+      // debugger;
+      const carr = [];
+      const cnodes = document.querySelectorAll(
+        "#pane-side div > div > span > span"
+      );
+      let name = "";
+      let lastmsg = "";
+
+      cnodes.forEach((n, i) => {
+        if (i % 2 === 0) {
+          name = n.innerText;
+        } else {
+          lastmsg = n.innerText;
+          carr.push({ name, lastmsg });
+        }
+      });
+
+      return carr;
+    });
+    return contacts;
+  }
+
   async screenshot() {
     return await this.page.screenshot({});
   }

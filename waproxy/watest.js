@@ -2,7 +2,8 @@ const waproxy = require("./waproxy");
 
 (async () => {
   await waproxy.connect();
-  await waproxy.disconnect();
-  console.log("terminated");
+  const contacts = await waproxy.getContacts();
+  console.log("contacts: ", contacts);
+  // await waproxy.disconnect();
   process.exit();
 })();

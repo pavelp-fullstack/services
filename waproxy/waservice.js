@@ -8,6 +8,7 @@ const staticPath = __dirname + "/public";
 app.use(express.static(staticPath));
 
 app.get("/api/screenshot", api.screenshot);
+app.get("/api/contacts", api.contacts);
 
 app.use((req, res) => {
   res.type("text/plain");
