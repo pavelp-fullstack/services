@@ -1,4 +1,4 @@
-const waproxy = require("./waproxy");
+const waproxy = require("../proxy/waproxy");
 
 exports.screenshot = async (req, res) => {
   const data = await waproxy.screenshot();
@@ -9,6 +9,12 @@ exports.screenshot = async (req, res) => {
 exports.contacts = async (req, res) => {
   const contacts = await waproxy.getContacts();
   res.json(contacts);
+};
+
+exports.messages = async (req, res) => {
+  const contact = req.params.contact;
+  const msgs = await waproxy.getMessages(contact);
+  res.json(msgs);
 };
 
 (async () => {

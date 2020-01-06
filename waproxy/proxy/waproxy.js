@@ -7,7 +7,11 @@ const {
   configPath,
   userDataDir,
   webClientUrl
-} = require("./util/waconfig");
+} = require("../util/waconfig");
+
+const CONTACTS_SELECTOR = "#pane-side div > div > span > span";
+const CURRENT_CONTACT_SELECTOR =
+  "#main > header > div._3V5x5 > div._1lpto > div > span";
 
 class WhatsAppProxy {
   browser = null;
@@ -19,26 +23,78 @@ class WhatsAppProxy {
   }
 
   async getContacts() {
+    let cs = CONTACTS_SELECTOR;
     const contacts = await this.page.evaluate(() => {
       // debugger;
       const carr = [];
       const cnodes = document.querySelectorAll(
         "#pane-side div > div > span > span"
       );
-      let name = "";
+      let title = "";
       let lastmsg = "";
 
       cnodes.forEach((n, i) => {
         if (i % 2 === 0) {
-          name = n.innerText;
+          title = n.innerText;
         } else {
           lastmsg = n.innerText;
-          carr.push({ name, lastmsg });
+          carr.push({ title, lastmsg });
         }
       });
 
       return carr;
     });
+    return contacts;
+  }
+
+  async getCurrentContact() {
+    const title = await this.page.evaluate(() => {
+      var h1 = document.querySelectorAll(
+        "#main > header > div._3V5x5 > div._1lpto > div > span"
+      );
+      return h1[0].title;
+    });
+    return title;
+  }
+
+  async getMessages(title) {
+    await this.selectContact(title);
+    await this.page.waitFor(1000);
+    const currentTitle = await this.getCurrentContact();
+    const messages = await this.page.evaluate(() => {
+      const msgs = [];
+      const msgArea = document.querySelector("#main .copyable-area");
+      var div = msgArea.querySelector("div");
+      for (i = 0; i < div.children.length; i++) {
+        const chdiv = div.children[i];
+        if (chdiv.children.length === 0) continue;
+        const msgnodes = chdiv.querySelectorAll("div > div > span > span");
+        for (j = 0; j < msgnodes.length; j++) {
+          msgnode = msgnodes[j];
+          msgs.push({ msg: msgnode.innerText });
+        }
+      }
+      return msgs;
+    });
+    return messages;
+  }
+
+  async selectContact(title) {
+    const contacts = await this.page.$$(CONTACTS_SELECTOR);
+    let i = 0;
+    let contact = null;
+    while (i < contacts.length) {
+      const contactTitle = await contacts[i].getProperty("title");
+      const ct = await contactTitle.jsonValue();
+      if (ct === title) {
+        contact = contacts[i];
+        break;
+      }
+      i += 2; //iterate over last message item
+    }
+    if (contact) {
+      await contact.click();
+    }
     return contacts;
   }
 
@@ -76,30 +132,6 @@ class WhatsAppProxy {
         "WhatsApp Proxy cannot connect to the client - please make sure that walauncher service is running and healthy."
       );
     }
-
-    /*
-    if (!browser) {
-      console.log(puppeteer.executablePath());
-      browser = await puppeteer.launch({
-        headless: false
-      });
-      endpoint = browser.wsEndpoint();
-      fs.writeFileSync(connectPath, endpoint, "utf8");
-      page = await browser.newPage();
-      await page.setViewport({ width: 1000, height: 500 });
-    }
-
-    if (page) {
-      const selector =
-        "#tsf > div:nth-child(2) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input";
-      const [response] = await Promise.all([
-        // page.waitForNavigation({ waitUntil: "load" }),
-        page.click(selector, { clickCount: 2 })
-      ]);
-
-      await page.type(selector, "audi\n");
-    }
-    */
   }
 
   async disconnect() {

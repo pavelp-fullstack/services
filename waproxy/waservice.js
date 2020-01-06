@@ -1,5 +1,5 @@
 const express = require("express");
-const api = require("./waapi");
+const api = require("./api/waapi");
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -9,6 +9,7 @@ app.use(express.static(staticPath));
 
 app.get("/api/screenshot", api.screenshot);
 app.get("/api/contacts", api.contacts);
+app.get("/api/messages/:contact", api.messages);
 
 app.use((req, res) => {
   res.type("text/plain");
