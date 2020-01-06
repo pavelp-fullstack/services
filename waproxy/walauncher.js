@@ -26,6 +26,32 @@ process.on("SIGINT", async () => {
   process.exit();
 });
 
+const saveSession = async () => {
+  if (!page) return;
+  const cookiesObject = await page.cookies();
+  await jsonfile.writeFileSync(
+    configPath,
+    cookiesObject,
+    { spaces: 2 },
+    err => {
+      throw err;
+    }
+  );
+};
+
+const restoreSession = async () => {
+  const previousSession = fs.existsSync(configPath);
+  if (previousSession) {
+    const cookiesArr = require(`${configPath}`);
+    if (cookiesArr.length !== 0) {
+      for (let cookie of cookiesArr) {
+        await page.setCookie(cookie);
+      }
+      return true;
+    }
+  }
+};
+
 const saveLocalStorage = async () => {
   if (!page) return;
 
