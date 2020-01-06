@@ -7,7 +7,7 @@ const app = express();
 const staticPath = __dirname + "/public";
 app.use(express.static(staticPath));
 
-app.get("/api/screen", api.screen);
+app.get("/api/screenshot", api.screenshot);
 
 app.use((req, res) => {
   res.type("text/plain");

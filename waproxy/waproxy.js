@@ -7,7 +7,7 @@ const {
   configPath,
   userDataDir,
   webClientUrl
-} = require("./waconfig");
+} = require("./util/waconfig");
 
 class WhatsAppProxy {
   browser = null;
@@ -132,8 +132,6 @@ class WhatsAppProxy {
 
   async disconnect() {
     if (!this.browser) return;
-    // await waDumpSession();
-    // await browser.close();
     await browser.disconnect();
     this.browser = null;
     this.page = null;
